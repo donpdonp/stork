@@ -2,4 +2,4 @@ all:
 	cargo build
 
 run: all
-	./target/debug/stork
+	RUST_BACKTRACE=1 ./target/debug/stork
