@@ -1,2 +1,5 @@
-{ "ip": "12.34.56.78",
-  "host": "satellite.storj:555" }
+{ "ip": "12.34.56.78:890",
+  "bootstrap": "35.224.92.47:8888",
+  "_bootstrap": "bootstrap.storj.io:8888",
+  "satellites": ["121RTSDpyNZVcEU84Ticf2L1ntiuUimbWgfATz21tuvgk3vzoA6"]
+}

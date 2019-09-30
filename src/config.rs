@@ -3,12 +3,16 @@ use std::fs;
 
 #[derive(Debug)]
 pub struct Config<'a> {
-    pub host: &'a str,
+    pub ip: &'a str,
+    pub bootstrap: &'a str,
+    pub satellites: [&'a str; 1],
 }
 
 pub fn new<'a>(config_file: &'a Value) -> Config<'a> {
     Config {
-        host: config_file["host"].as_str().unwrap(),
+        ip: config_file["ip"].as_str().unwrap(),
+        bootstrap: config_file["bootstrap"].as_str().unwrap(),
+        satellites: [config_file["satellites"][0].as_str().unwrap()],
     }
 }
 
