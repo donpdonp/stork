@@ -1,8 +1,9 @@
 mod config;
 mod socket;
+mod sjproto;
 mod protos {
-    mod contact;
-    mod node;
+    pub mod contact;
+    pub mod node;
 }
 
 fn main() {
@@ -10,5 +11,6 @@ fn main() {
     let config_json = config::read("config.json").expect("config bad");
     let config = config::new(&config_json);
     println!("{:?}", config);
-    socket::open(config.bootstrap).expect("no sock");
+    let socket = &mut socket::open(config.bootstrap).expect("no sock");
+    sjproto::handshake(socket);
 }
