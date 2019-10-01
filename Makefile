@@ -3,3 +3,6 @@ all:
 
 run: all
 	RUST_BACKTRACE=0 ./target/debug/stork
+
+runbt: all
+	RUST_BACKTRACE=1 ./target/debug/stork

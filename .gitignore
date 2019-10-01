@@ -1,3 +1,4 @@
 /src/protos/
 /target/
+/config.json
 **/*.rs.bk
