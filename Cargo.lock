@@ -313,6 +313,7 @@ dependencies = [
 name = "stork"
 version = "0.1.0"
 dependencies = [
+ "futures 0.1.29 (registry+https://github.com/rust-lang/crates.io-index)",
  "grpcio 0.4.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "protobuf 2.8.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "protobuf-codegen-pure 2.8.1 (registry+https://github.com/rust-lang/crates.io-index)",

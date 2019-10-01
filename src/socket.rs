@@ -1,4 +1,3 @@
-use std::io::prelude::*;
 use std::net::{TcpStream, SocketAddr};
 use std::str::FromStr;
 use std::time::Duration;

@@ -1,7 +1,6 @@
 use std::net::TcpStream;
-use std::io::prelude::*;
-use std::sync::atomic::AtomicUsize;
-use protobuf::{CodedInputStream, CodedOutputStream, Message, ProtobufResult, RepeatedField};
+use std::io::Read;
+use protobuf::{CodedInputStream, CodedOutputStream, Message};
 
 use crate::protos::{contact, node};
 
