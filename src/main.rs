@@ -1,3 +1,6 @@
+use grpcio::{ChannelBuilder, EnvBuilder};
+use std::sync::Arc;
+
 mod config;
 mod socket;
 mod sjproto;
@@ -11,6 +14,9 @@ fn main() {
     let config_json = config::read("config.json").expect("config bad");
     let config = config::new(&config_json);
     println!("{:?}", config);
-    let socket = &mut socket::open(config.bootstrap).expect("no sock");
-    sjproto::handshake(socket);
+
+    let env = Arc::new(EnvBuilder::new().build());
+    let ch = ChannelBuilder::new(env).connect(config.bootstrap);
+    println!("{:?} connected", config.bootstrap);
+    //sjproto::handshake(socket);
 }
