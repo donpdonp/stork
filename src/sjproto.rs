@@ -1,23 +1,27 @@
 use protobuf::{CodedOutputStream, Message};
 use std::io::Read;
-use std::net::TcpStream;
+use std::net::{SocketAddr, TcpStream};
 use std::sync::Arc;
-use std::fs::File;
-use grpcio::{Channel, ChannelBuilder, ChannelCredentialsBuilder, EnvBuilder};
-
+use tls_api::TlsConnector;
+use tls_api::TlsConnectorBuilder;
+use native_tls::TlsConnectorBuilder as MetalBuilder;
 use crate::protos::{contact, node};
 
-pub fn grpc_connect(host: &str) -> Channel {
-    let env = Arc::new(EnvBuilder::new().build());
-    // let mut f = File::open("foo.txt")?;
-    // let mut key_bytes = Vec::new();
-    // f.read_to_end(&mut key_bytes)?;
-    // let mut f = File::open("foo.txt")?;
-    // let mut cert_bytes = Vec::new();
-    // f.read_to_end(&mut cert_bytes)?;
-    let rootcert = "".as_bytes().to_vec();
-    let cert = ChannelCredentialsBuilder::new().root_cert(rootcert).build();
-    ChannelBuilder::new(env).secure_connect(host, cert)
+fn test_tls_connector() -> tls_api_native_tls::TlsConnector {
+    let mut builder = tls_api_native_tls::TlsConnector::builder().unwrap();
+    let mbu: &mut MetalBuilder = builder.underlying_mut();
+    //mbu.danger_accept_invalid_certs(true);
+    builder.build().unwrap()
+}
+
+pub fn grpc_connect(host: &str) -> Arc<grpc::Client> {
+    let client_conf = Default::default();
+    let mut tls_option =
+        httpbis::ClientTlsOption::Tls("foobar.com".to_owned(), Arc::new(test_tls_connector()));
+    let addr = SocketAddr::new(host.parse().unwrap(), 7777);
+    let grpc_client =
+        Arc::new(grpc::Client::new_expl(&addr, "foobar.com", tls_option, client_conf).unwrap());
+    grpc_client
 }
 
 pub fn handshake(stream: &mut TcpStream) {

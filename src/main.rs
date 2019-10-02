@@ -1,7 +1,6 @@
-//use futures::prelude::*;
-use grpcio::{ChannelBuilder, ChannelCredentialsBuilder, EnvBuilder};
 use protos::contact::CheckInRequest;
-use protos::contact_grpc::{NodeClient};
+use protos::contact_grpc::{Node, NodeClient};
+use grpc::ClientStub;
 
 mod config;
 mod sjproto;
@@ -21,10 +20,10 @@ fn main() {
     let ch = sjproto::grpc_connect(config.bootstrap);
     println!("{:?} connected", config.bootstrap);
 
-    let nc = NodeClient::new(ch);
+    let nc = NodeClient::with_client(ch);
     let ctr = CheckInRequest::default();
-    println!("Node check-in request: {:?} X", ctr);
-    let reply = nc.check_in(&ctr); //.expect("rpc");
+    //println!("Node check-in request: {:?} X", ctr);
+    let reply = nc.check_in(grpc::RequestOptions::new(), ctr);
     //sjproto::handshake(socket);
-    println!("Node check-in response: {:?} X", reply);
+    println!("Node check-in response: {:?} X", reply.wait());
 }
