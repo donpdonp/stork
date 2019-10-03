@@ -9,16 +9,13 @@ license = "MIT"
 [dependencies]
 serde_json = "1.0"
 protobuf = "2.8.1"
+futures = "~0.1"
 tls-api            = "0.1.*"
 tls-api-native-tls = "0.1.*"
-grpc       = "0.6.1"
-httpbis         = "~0.7"
-native-tls = "^0.1"
-
-#grpc       = { git = "https://github.com/stepancheg/grpc-rust" }
-#httpbis       = { git = "https://github.com/stepancheg/rust-http2" }
+grpcio       = "~0.4"
+httpbis      = "~0.7"
+native-tls   = "~0.1"
 
 [build-dependencies]
 #protobuf-codegen-pure = "2.8.1"
-#protoc-grpcio = "1.1.0"
-protoc-rust-grpc = "0.6.1"
+protoc-grpcio = "1.1.0"
