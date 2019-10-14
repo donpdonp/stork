@@ -7,9 +7,8 @@ use std::sync::Arc;
 use crate::protos::{contact, node};
 
 pub fn grpc_connect(host: &str) -> Channel {
-    let rootcert = "".as_bytes().to_vec();
     let env = Arc::new(EnvBuilder::new().build());
-    let cert = ChannelCredentialsBuilder::new().root_cert(rootcert).build();
+    let cert = ChannelCredentialsBuilder::new().build();
     ChannelBuilder::new(env).secure_connect(host, cert)
 }
 

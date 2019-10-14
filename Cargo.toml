@@ -10,11 +10,7 @@ license = "MIT"
 serde_json = "1.0"
 protobuf = "2.8.1"
 futures = "~0.1"
-tls-api            = "0.1.*"
-tls-api-native-tls = "0.1.*"
-grpcio       = "~0.4"
-httpbis      = "~0.7"
-native-tls   = "~0.1"
+grpcio       = { path = "../grpc-rs" }
 
 [build-dependencies]
 #protobuf-codegen-pure = "2.8.1"
