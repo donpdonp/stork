@@ -1,14 +1,17 @@
 use protobuf::{CodedOutputStream, Message};
 use std::io::Read;
-use std::net::{SocketAddr, TcpStream};
+use std::net::{TcpStream};
 use grpcio::{Channel, ChannelBuilder, ChannelCredentialsBuilder, EnvBuilder};
 
 use std::sync::Arc;
 use crate::protos::{contact, node};
 
-pub fn grpc_connect(host: &str) -> Channel {
+pub fn grpc_connect(host: &str, client_cert: &str, client_key: &str) -> Channel {
     let env = Arc::new(EnvBuilder::new().build());
-    let cert = ChannelCredentialsBuilder::new().build();
+    let cert_builder = ChannelCredentialsBuilder::new()
+                          .cert(client_cert.as_bytes().to_vec(),
+                                client_key.as_bytes().to_vec());
+    let cert = cert_builder.build();
     ChannelBuilder::new(env).secure_connect(host, cert)
 }
 

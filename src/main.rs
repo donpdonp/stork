@@ -1,6 +1,5 @@
 use protos::contact::CheckInRequest;
-use protos::contact_grpc::{Node, NodeClient};
-use grpcio::{ChannelBuilder, ChannelCredentialsBuilder, EnvBuilder};
+use protos::contact_grpc::{NodeClient};
 
 mod config;
 mod sjproto;
@@ -17,7 +16,7 @@ fn main() {
     let config = config::new(&config_json);
     println!("{:?}", config);
 
-    let ch = sjproto::grpc_connect(config.bootstrap);
+    let ch = sjproto::grpc_connect(config.bootstrap, "", "");
     println!("{:?} connected", config.bootstrap);
 
     let nc = NodeClient::new(ch);
