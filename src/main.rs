@@ -2,13 +2,9 @@ use protos::contact::CheckInRequest;
 use protos::contact_grpc::NodeClient;
 
 mod config;
+mod protos;
 mod sjproto;
 mod socket;
-mod protos {
-    pub mod contact;
-    pub mod contact_grpc;
-    pub mod node;
-}
 
 fn main() {
     println!("{} {}", env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"));
