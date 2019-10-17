@@ -7,8 +7,6 @@ pub struct Config<'a> {
     pub bootstrap: &'a str,
     pub satellites: [Satellite<'a>; 1],
     pub storj_id: &'a str,
-    pub client_cert: &'a str,
-    pub client_key: &'a str,
 }
 
 #[derive(Debug)]
@@ -17,7 +15,7 @@ pub struct Satellite<'a> {
     pub ip: &'a str,
 }
 
-pub fn new<'a>(config_file: &'a Value, client_cert: &'a str, client_key: &'a str) -> Config<'a> {
+pub fn new<'a>(config_file: &'a Value) -> Config<'a> {
     let onesat = &config_file["satellites"][0];
     Config {
         ip: config_file["ip"].as_str().unwrap(),
@@ -27,8 +25,6 @@ pub fn new<'a>(config_file: &'a Value, client_cert: &'a str, client_key: &'a str
             ip: onesat["ip"].as_str().unwrap(),
         }],
         storj_id: config_file["storj_id"].as_str().unwrap(),
-        client_cert: client_cert,
-        client_key: client_key,
     }
 }
 
@@ -38,6 +34,11 @@ pub fn read(filename: &str) -> Result<Value> {
     return serde_json::from_str(&json);
 }
 
-// impl Config<'a> {
-//     pub fn go() { }
-// }
+impl Config<'_> {
+    pub fn read_client_cert(&self) -> String {
+      return fs::read_to_string("client.cert").expect("bad client cert");
+    }
+    pub fn read_client_key(&self) -> String {
+      return fs::read_to_string("client.key").expect("bad client key");
+    }
+}

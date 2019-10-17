@@ -16,10 +16,12 @@ fn main() {
     let config_json = config::read("config.json").expect("config bad");
     let client_cert = fs::read_to_string("client.cert").expect("bad client cert");
     let client_key = fs::read_to_string("client.key").expect("bad client key");
-    let config = config::new(&config_json, &client_cert, &client_key);
+    let config = config::new(&config_json);
     println!("{:?}", config);
 
-    let ch = sjproto::grpc_connect(config.satellites[0].ip, config.client_cert, config.client_key);
+    let ch = sjproto::grpc_connect(config.satellites[0].ip,
+        config.read_client_cert().as_str(),
+        config.read_client_key().as_str(), );
     println!("{:?} connected", config.bootstrap);
 
     let nc = NodeClient::new(ch);
