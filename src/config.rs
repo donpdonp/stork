@@ -3,10 +3,9 @@ use std::fs;
 
 #[derive(Debug)]
 pub struct Config<'a> {
-    pub ip: &'a str,
-    pub bootstrap: &'a str,
+    pub myip: &'a str,
     pub satellites: [Satellite<'a>; 1],
-    pub storj_id: &'a str,
+    pub storj_config: &'a str,
 }
 
 #[derive(Debug)]
@@ -18,13 +17,12 @@ pub struct Satellite<'a> {
 pub fn new<'a>(config_file: &'a Value) -> Config<'a> {
     let onesat = &config_file["satellites"][0];
     Config {
-        ip: config_file["ip"].as_str().unwrap(),
-        bootstrap: config_file["bootstrap"].as_str().unwrap(),
+        myip: config_file["myip"].as_str().unwrap(),
         satellites: [Satellite {
             id: onesat["id"].as_str().unwrap(),
             ip: onesat["ip"].as_str().unwrap(),
         }],
-        storj_id: config_file["storj_id"].as_str().unwrap(),
+        storj_config: config_file["storj_config"].as_str().unwrap(),
     }
 }
 
@@ -36,9 +34,12 @@ pub fn read(filename: &str) -> Result<Value> {
 
 impl Config<'_> {
     pub fn read_client_cert(&self) -> String {
-        return fs::read_to_string("client.cert").expect("bad client cert");
+        let path = self.storj_config.to_string() + "/identity/storagenode/client.cert";
+        return fs::read_to_string(path).expect("bad client cert");
     }
+
     pub fn read_client_key(&self) -> String {
-        return fs::read_to_string("client.key").expect("bad client key");
+        let path = self.storj_config.to_string() + "/identity/storagenode/client.key";
+        return fs::read_to_string(path).expect("bad client key");
     }
 }

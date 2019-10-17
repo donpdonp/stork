@@ -13,11 +13,11 @@ fn main() {
     println!("{:?}", config);
 
     let ch = sjproto::grpc_connect(
-        config.satellites[0].ip,
+        &config.satellites[0],
         config.read_client_cert().as_str(),
         config.read_client_key().as_str(),
     );
-    println!("{:?} connected", config.bootstrap);
+    println!("{:?} connected", "ch here");
 
     let nc = NodeClient::new(ch);
     let ctr = CheckInRequest::default();
