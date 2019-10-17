@@ -1,4 +1,3 @@
-
 mod config;
 mod protos;
 mod sjproto;
@@ -17,6 +16,6 @@ fn main() {
     );
     println!("{:?} connected", "ch here");
 
-    let reply = sjproto::handshake(ch);
+    let reply = sjproto::handshake(ch, config);
     println!("Node check-in response: {:?} X", reply);
 }
