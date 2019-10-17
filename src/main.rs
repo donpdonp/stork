@@ -1,6 +1,6 @@
-use std::fs;
 use protos::contact::CheckInRequest;
-use protos::contact_grpc::{NodeClient};
+use protos::contact_grpc::NodeClient;
+use std::fs;
 
 mod config;
 mod sjproto;
@@ -19,7 +19,7 @@ fn main() {
     let config = config::new(&config_json, &client_cert, &client_key);
     println!("{:?}", config);
 
-    let ch = sjproto::grpc_connect(config.bootstrap, config.client_cert, config.client_key);
+    let ch = sjproto::grpc_connect(config.satellites[0].ip, config.client_cert, config.client_key);
     println!("{:?} connected", config.bootstrap);
 
     let nc = NodeClient::new(ch);
