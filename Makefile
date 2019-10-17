@@ -6,3 +6,6 @@ run: all
 
 runbt: all
 	RUST_BACKTRACE=1 ./target/debug/stork
+
+format: 
+	rustfmt src/main.rs

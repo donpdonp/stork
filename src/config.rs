@@ -36,9 +36,9 @@ pub fn read(filename: &str) -> Result<Value> {
 
 impl Config<'_> {
     pub fn read_client_cert(&self) -> String {
-      return fs::read_to_string("client.cert").expect("bad client cert");
+        return fs::read_to_string("client.cert").expect("bad client cert");
     }
     pub fn read_client_key(&self) -> String {
-      return fs::read_to_string("client.key").expect("bad client key");
+        return fs::read_to_string("client.key").expect("bad client key");
     }
 }
