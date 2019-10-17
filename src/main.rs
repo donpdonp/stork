@@ -1,5 +1,3 @@
-use protos::contact::CheckInRequest;
-use protos::contact_grpc::NodeClient;
 
 mod config;
 mod protos;
@@ -19,10 +17,6 @@ fn main() {
     );
     println!("{:?} connected", "ch here");
 
-    let nc = NodeClient::new(ch);
-    let ctr = CheckInRequest::default();
-    //println!("Node check-in request: {:?} X", ctr);
-    let reply = nc.check_in(&ctr);
-    //sjproto::handshake(socket);
+    let reply = sjproto::handshake(ch);
     println!("Node check-in response: {:?} X", reply);
 }
