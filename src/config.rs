@@ -4,6 +4,8 @@ use std::fs;
 #[derive(Debug)]
 pub struct Config<'a> {
     pub myip: &'a str,
+    pub email: &'a str,
+    pub wallet: &'a str,
     pub satellites: [Satellite<'a>; 1],
     pub storj_config: &'a str,
 }
@@ -18,6 +20,8 @@ pub fn new<'a>(config_file: &'a Value) -> Config<'a> {
     let onesat = &config_file["satellites"][0];
     Config {
         myip: config_file["myip"].as_str().unwrap(),
+        email: config_file["email"].as_str().unwrap(),
+        wallet: config_file["wallet"].as_str().unwrap(),
         satellites: [Satellite {
             id: onesat["id"].as_str().unwrap(),
             ip: onesat["ip"].as_str().unwrap(),
@@ -34,12 +38,12 @@ pub fn read(filename: &str) -> Result<Value> {
 
 impl Config<'_> {
     pub fn read_client_cert(&self) -> String {
-        let path = self.storj_config.to_string() + "/identity/storagenode/client.cert";
+        let path = self.storj_config.to_string() + "/identity/storagenode/identity.cert";
         return fs::read_to_string(path).expect("bad client cert");
     }
 
     pub fn read_client_key(&self) -> String {
-        let path = self.storj_config.to_string() + "/identity/storagenode/client.key";
+        let path = self.storj_config.to_string() + "/identity/storagenode/identity.key";
         return fs::read_to_string(path).expect("bad client key");
     }
 }

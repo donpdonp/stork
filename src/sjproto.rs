@@ -7,16 +7,17 @@ use crate::config::Config;
 use crate::config::Satellite;
 use crate::protos::contact::{CheckInRequest, CheckInResponse};
 use crate::protos::contact_grpc::NodeClient;
-use crate::protos::node::NodeVersion;
+use crate::protos::node::{NodeVersion, NodeCapacity, NodeOperator};
 
 pub fn grpc_connect(satellite: &Satellite, client_cert: &str, client_key: &str) -> Channel {
-    let env = Arc::new(EnvBuilder::new().build());
     let cert_builder = ChannelCredentialsBuilder::new().cert(
         client_cert.as_bytes().to_vec(),
         client_key.as_bytes().to_vec(),
     );
     let cert = cert_builder.build();
-    ChannelBuilder::new(env).secure_connect(satellite.ip, cert)
+    let env = Arc::new(EnvBuilder::new().build());
+    let chan_builder = ChannelBuilder::new(env);
+    chan_builder.secure_connect(satellite.ip, cert)
 }
 
 pub fn handshake(ch: Channel, config: Config) -> Result<CheckInResponse, grpcio::Error> {
@@ -31,8 +32,16 @@ pub fn handshake(ch: Channel, config: Config) -> Result<CheckInResponse, grpcio:
     //             Capacity: &self.Capacity,
     //             Operator: &self.Operator,
     //         })
-    cir.set_address("1.2.3.4".to_string());
+    cir.set_address(config.myip.to_string());
     cir.set_version(ver);
+    let mut capacity = NodeCapacity::new();
+    capacity.set_free_bandwidth(1000000000);
+    capacity.set_free_disk(1000000000);
+    cir.set_capacity(capacity);
+    let mut op = NodeOperator::new();
+    op.set_email(config.email.to_string());
+    op.set_wallet(config.wallet.to_string());
+    cir.set_operator(op);
     println!("Node check-in request: {:?}", cir);
     nc.check_in(&cir)
 }
