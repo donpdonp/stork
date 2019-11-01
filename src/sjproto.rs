@@ -15,9 +15,10 @@ pub fn grpc_connect(satellite: &Satellite, client_cert: &str, client_key: &str) 
         client_cert.as_bytes().to_vec(),
         client_key.as_bytes().to_vec(),
     );
-    let mut channel_cred = channel_cred_builder.build();
+    let channel_cred = channel_cred_builder.build();
     let env = Arc::new(EnvBuilder::new().build());
     let chan_builder = ChannelBuilder::new(env);
+    println!("TLS Connecting to {}", satellite.ip);
     chan_builder.secure_connect(satellite.ip, channel_cred)
 }
 
@@ -30,7 +31,7 @@ pub fn handshake(ch: Channel, config: Config) -> Result<CheckInResponse, grpcio:
     ver.set_timestamp(ts);
     ver.set_release(true);
     ver.set_version("0.24.5".to_string());
-    let mut cir = CheckInRequest::default();
+    let mut check_in_request = CheckInRequest::default();
     // storagenode.go
     // conn.NodeClient().CheckIn(ctx, &pb.CheckInRequest{
     //             Address:  self.Address.GetAddress(),
@@ -38,16 +39,16 @@ pub fn handshake(ch: Channel, config: Config) -> Result<CheckInResponse, grpcio:
     //             Capacity: &self.Capacity,
     //             Operator: &self.Operator,
     //         })
-    cir.set_address(config.myip.to_string());
-    cir.set_version(ver);
+    check_in_request.set_address(config.myip.to_string() + ":28967");
+    check_in_request.set_version(ver);
     let mut capacity = NodeCapacity::new();
     capacity.set_free_bandwidth(1000000000);
     capacity.set_free_disk(1000000000);
-    cir.set_capacity(capacity);
+    check_in_request.set_capacity(capacity);
     let mut op = NodeOperator::new();
     op.set_email(config.email.to_string());
     op.set_wallet(config.wallet.to_string());
-    cir.set_operator(op);
-    println!("Node check-in request: {:?}", cir);
-    nc.check_in(&cir)
+    check_in_request.set_operator(op);
+    println!("Node check-in request: {:?}", check_in_request);
+    nc.check_in(&check_in_request)
 }
