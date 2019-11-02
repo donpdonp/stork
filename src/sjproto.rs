@@ -9,6 +9,8 @@ use crate::config::Satellite;
 use crate::protos::contact::{CheckInRequest, CheckInResponse};
 use crate::protos::contact_grpc::NodeClient;
 use crate::protos::node::{NodeVersion, NodeCapacity, NodeOperator};
+use crate::protos::nodestats_grpc::NodeStatsClient;
+use crate::protos::nodestats::{GetStatsRequest, GetStatsResponse};
 
 pub fn grpc_connect(satellite: &Satellite, client_cert: &str, client_key: &str) -> Channel {
     let channel_cred_builder = ChannelCredentialsBuilder::new().cert(
@@ -51,4 +53,10 @@ pub fn handshake(ch: Channel, config: Config) -> Result<CheckInResponse, grpcio:
     check_in_request.set_operator(op);
     println!("Node check-in request: {:?}", check_in_request);
     nc.check_in(&check_in_request)
+}
+
+pub fn stat(ch: Channel, config: Config) -> Result<GetStatsResponse, grpcio::Error> {
+    let nsc = NodeStatsClient::new(ch);
+    let nsr = GetStatsRequest::new();
+    nsc.get_stats(&nsr)
 }
