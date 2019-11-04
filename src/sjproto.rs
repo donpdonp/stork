@@ -1,7 +1,6 @@
 use std::sync::Arc;
 
 use grpcio::{Channel, ChannelBuilder, ChannelCredentialsBuilder, EnvBuilder};
-use protobuf::Message;
 use protobuf::well_known_types::Timestamp;
 
 use crate::config::Config;

@@ -1,15 +1,13 @@
 extern crate clap;
-use clap::{Arg, App, SubCommand};
+use clap::{App, SubCommand};
 
 mod config;
 mod protos;
 mod sjproto;
-mod socket;
 
 fn main() {
-    println!("{} {}", env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"));
-
-    let matches = App::new("stork")
+    let matches = App::new(env!("CARGO_PKG_NAME"))
+                    .version(env!("CARGO_PKG_VERSION"))
                     .subcommand(SubCommand::with_name("rep"))
                     .get_matches();
     let config_file = matches.value_of("config").unwrap_or("config.json");
@@ -25,7 +23,7 @@ fn main() {
             config.read_client_cert().as_str(),
             config.read_client_key().as_str(),
         );
-        println!("{:?} connected", "channel2");
+        println!("connected.");
         let reply_stat = sjproto::stat(channel2);
         println!("Stat response: {:?} X", reply_stat);
     }

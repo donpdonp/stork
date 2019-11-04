@@ -31,7 +31,6 @@ pub fn new<'a>(config_file: &'a Value) -> Config<'a> {
 }
 
 pub fn read(filename: &str) -> Result<Value> {
-    println!("reading {}", filename);
     let json = fs::read_to_string(filename).expect("Something went wrong reading the file");
     return serde_json::from_str(&json);
 }
@@ -39,13 +38,11 @@ pub fn read(filename: &str) -> Result<Value> {
 impl Config<'_> {
     pub fn read_client_cert(&self) -> String {
         let path = self.storj_config.to_string() + "/identity/storagenode/identity.cert";
-        println!("loading {}", path);
         return fs::read_to_string(path).expect("bad client cert");
     }
 
     pub fn read_client_key(&self) -> String {
         let path = self.storj_config.to_string() + "/identity/storagenode/identity.key";
-        println!("loading {}", path);
         return fs::read_to_string(path).expect("bad client key");
     }
 }
