@@ -12,6 +12,7 @@ protobuf = "2.8.1"
 futures = "~0.1"
 grpcio  = { path = "../grpc-rs" }
 #grpcio = "0.4.5"
+clap = "2.33.0"
 
 [build-dependencies]
 #protobuf-codegen-pure = "2.8.1"

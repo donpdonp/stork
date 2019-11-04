@@ -24,7 +24,7 @@ pub fn grpc_connect(satellite: &Satellite, client_cert: &str, client_key: &str) 
     chan_builder.secure_connect(satellite.ip, channel_cred)
 }
 
-pub fn handshake(ch: Channel, config: Config) -> Result<CheckInResponse, grpcio::Error> {
+pub fn handshake(ch: Channel, config: &Config) -> Result<CheckInResponse, grpcio::Error> {
     let nc = NodeClient::new(ch);
     let mut ver = NodeVersion::new();
     ver.set_commit_hash("d667c2d974cc33890f441bd64c4d9045f11cf59b".to_string());
@@ -55,7 +55,7 @@ pub fn handshake(ch: Channel, config: Config) -> Result<CheckInResponse, grpcio:
     nc.check_in(&check_in_request)
 }
 
-pub fn stat(ch: Channel, config: Config) -> Result<GetStatsResponse, grpcio::Error> {
+pub fn stat(ch: Channel) -> Result<GetStatsResponse, grpcio::Error> {
     let nsc = NodeStatsClient::new(ch);
     let nsr = GetStatsRequest::new();
     nsc.get_stats(&nsr)
