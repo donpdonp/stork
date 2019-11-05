@@ -7,9 +7,9 @@ use crate::config::Config;
 use crate::config::Satellite;
 use crate::protos::contact::{CheckInRequest, CheckInResponse};
 use crate::protos::contact_grpc::NodeClient;
-use crate::protos::node::{NodeVersion, NodeCapacity, NodeOperator};
-use crate::protos::nodestats_grpc::NodeStatsClient;
+use crate::protos::node::{NodeCapacity, NodeOperator, NodeVersion};
 use crate::protos::nodestats::{GetStatsRequest, GetStatsResponse};
+use crate::protos::nodestats_grpc::NodeStatsClient;
 
 pub fn grpc_connect(satellite: &Satellite, client_cert: &str, client_key: &str) -> Channel {
     let channel_cred_builder = ChannelCredentialsBuilder::new().cert(
@@ -19,19 +19,18 @@ pub fn grpc_connect(satellite: &Satellite, client_cert: &str, client_key: &str) 
     let channel_cred = channel_cred_builder.build();
     let env = Arc::new(EnvBuilder::new().build());
     let chan_builder = ChannelBuilder::new(env);
-    println!("TLS Connecting to {}", satellite.ip);
     chan_builder.secure_connect(satellite.ip, channel_cred)
 }
 
 pub fn handshake(ch: Channel, config: &Config) -> Result<CheckInResponse, grpcio::Error> {
     let nc = NodeClient::new(ch);
     let mut ver = NodeVersion::new();
-    ver.set_commit_hash("d667c2d974cc33890f441bd64c4d9045f11cf59b".to_string());
+    ver.set_commit_hash(config.storj.commit_hash.to_string());
     let mut ts = Timestamp::new();
     ts.set_seconds(1572640075);
     ver.set_timestamp(ts);
     ver.set_release(true);
-    ver.set_version("0.24.5".to_string());
+    ver.set_version(config.storj.version.to_string());
     let mut check_in_request = CheckInRequest::default();
     // storagenode.go
     // conn.NodeClient().CheckIn(ctx, &pb.CheckInRequest{
@@ -40,7 +39,7 @@ pub fn handshake(ch: Channel, config: &Config) -> Result<CheckInResponse, grpcio
     //             Capacity: &self.Capacity,
     //             Operator: &self.Operator,
     //         })
-    check_in_request.set_address(config.myip.to_string() + ":28967");
+    check_in_request.set_address(config.myip.to_string());
     check_in_request.set_version(ver);
     let mut capacity = NodeCapacity::new();
     capacity.set_free_bandwidth(1000000000);
