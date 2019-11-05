@@ -31,16 +31,17 @@ fn main() {
 
 fn do_reputation(config: &config::Config) {
     hello();
-    let satellite = &config.satellites[0];
-    println!("Connecting to {}", satellite.ip);
-    let channel2 = sjproto::grpc_connect(
-        satellite,
-        config.read_client_cert().as_str(),
-        config.read_client_key().as_str(),
-    );
-    println!("connected.");
-    let reply_stat = sjproto::stat(channel2);
-    println!("Stat response: {:?} X", reply_stat);
+    for satellite in &config.satellites {
+        println!("Connecting to {}", satellite.ip);
+        let channel2 = sjproto::grpc_connect(
+            satellite,
+            config.read_client_cert().as_str(),
+            config.read_client_key().as_str(),
+        );
+        println!("connected.");
+        let reply_stat = sjproto::stat(channel2);
+        println!("Stat response: {:?} X", reply_stat);
+    }
 }
 
 fn do_check_in(config: &config::Config) {

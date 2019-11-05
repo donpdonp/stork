@@ -35,13 +35,13 @@ pub fn new<'a>(config_file: &'a Value) -> Config<'a> {
             commit_hash: config_file["storj"]["commit_hash"].as_str().unwrap(),
         },
     };
-    let onesat = &config_file["satellites"][0];
-    config.satellites.push(Satellite {
-            id: onesat["id"].as_str().unwrap(),
-            ip: onesat["ip"].as_str().unwrap(),
+    for jsat in config_file["satellites"].as_array().unwrap() {
+        println!("{:?}\n", jsat);
+        config.satellites.push(Satellite {
+            id: jsat["id"].as_str().unwrap(),
+            ip: jsat["ip"].as_str().unwrap(),
         });
-    //for jsat in config_file["satellites"].as_array() {
-    //} No Understand
+    }
     config
 }
 
