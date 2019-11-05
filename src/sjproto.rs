@@ -3,8 +3,7 @@ use std::sync::Arc;
 use grpcio::{Channel, ChannelBuilder, ChannelCredentialsBuilder, EnvBuilder};
 use protobuf::well_known_types::Timestamp;
 
-use crate::config::Config;
-use crate::config::Satellite;
+use crate::config::{Config, Satellite};
 use crate::protos::contact::{CheckInRequest, CheckInResponse};
 use crate::protos::contact_grpc::NodeClient;
 use crate::protos::node::{NodeCapacity, NodeOperator, NodeVersion};

@@ -6,7 +6,7 @@ pub struct Config<'a> {
     pub myip: &'a str,
     pub email: &'a str,
     pub wallet: &'a str,
-    pub satellites: [Satellite<'a>; 1],
+    pub satellites: Vec<Satellite<'a>>,
     pub storj: Storj<'a>,
 }
 
@@ -24,21 +24,25 @@ pub struct Satellite<'a> {
 }
 
 pub fn new<'a>(config_file: &'a Value) -> Config<'a> {
-    let onesat = &config_file["satellites"][0];
-    Config {
+    let mut config = Config {
         myip: config_file["myip"].as_str().unwrap(),
         email: config_file["email"].as_str().unwrap(),
         wallet: config_file["wallet"].as_str().unwrap(),
-        satellites: [Satellite {
-            id: onesat["id"].as_str().unwrap(),
-            ip: onesat["ip"].as_str().unwrap(),
-        }],
+        satellites: Vec::new(),
         storj: Storj {
             config: config_file["storj"]["config"].as_str().unwrap(),
             version: config_file["storj"]["version"].as_str().unwrap(),
             commit_hash: config_file["storj"]["commit_hash"].as_str().unwrap(),
         },
-    }
+    };
+    let onesat = &config_file["satellites"][0];
+    config.satellites.push(Satellite {
+            id: onesat["id"].as_str().unwrap(),
+            ip: onesat["ip"].as_str().unwrap(),
+        });
+    //for jsat in config_file["satellites"].as_array() {
+    //} No Understand
+    config
 }
 
 pub fn read(filename: &str) -> Result<Value> {
