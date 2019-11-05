@@ -23,7 +23,7 @@ pub struct Satellite<'a> {
     pub ip: &'a str,
 }
 
-pub fn new<'a>(config_file: &'a Value) -> Config<'a> {
+pub fn decode<'a>(config_file: &'a Value) -> Config<'a> {
     let mut config = Config {
         myip: config_file["myip"].as_str().unwrap(),
         email: config_file["email"].as_str().unwrap(),

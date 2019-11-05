@@ -19,7 +19,7 @@ fn main() {
 
     let config_file = options.value_of("config").unwrap_or("config.json");
     let config_json = config::read(config_file).expect("config bad");
-    let config = config::new(&config_json);
+    let config = config::decode(&config_json);
     println!("{:?} loaded", config.myip);
 
     match subcommand(options) {
@@ -32,14 +32,14 @@ fn main() {
 fn do_reputation(config: &config::Config) {
     hello();
     for satellite in &config.satellites {
-        println!("Connecting to {}", satellite.ip);
-        let channel2 = sjproto::grpc_connect(
+        let channel = sjproto::grpc_connect(
             satellite,
             config.read_client_cert().as_str(),
             config.read_client_key().as_str(),
         );
+        println!("Connecting to {}", satellite.ip);
         println!("connected.");
-        let reply_stat = sjproto::stat(channel2);
+        let reply_stat = sjproto::stat(channel);
         println!("Stat response: {:?} X", reply_stat);
     }
 }
