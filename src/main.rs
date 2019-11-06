@@ -31,16 +31,25 @@ fn main() {
 
 fn do_reputation(config: &config::Config) {
     hello();
+    let mut result: String;
     for satellite in &config.satellites {
         let channel = sjproto::grpc_connect(
             satellite,
             config.read_client_cert().as_str(),
             config.read_client_key().as_str(),
         );
-        println!("Connecting to {}", satellite.ip);
-        println!("connected.");
+        println!("Connecting {}", satellite.ip);
         let reply_stat = sjproto::stat(channel);
-        println!("Stat response: {:?} X", reply_stat);
+        if reply_stat.is_ok() {
+            let reply = reply_stat.unwrap();
+            let uptime = reply.uptime_check.unwrap();
+            let audit = reply.audit_check.unwrap();
+            result = format!("uptime: {}/{:.*} audit {}/{:.*}", uptime.total_count, 4, uptime.reputation_score,
+                audit.total_count, 4, audit.reputation_score);
+        } else {
+            result = "error".to_string();
+        }
+        println!("{:.*} {}", 8, satellite.id, &result);
     }
 }
 

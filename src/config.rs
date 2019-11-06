@@ -36,7 +36,6 @@ pub fn decode<'a>(config_file: &'a Value) -> Config<'a> {
         },
     };
     for jsat in config_file["satellites"].as_array().unwrap() {
-        println!("{:?}\n", jsat);
         config.satellites.push(Satellite {
             id: jsat["id"].as_str().unwrap(),
             ip: jsat["ip"].as_str().unwrap(),
